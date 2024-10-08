@@ -6,3 +6,4 @@
 /project/interface filter=lfs diff=lfs merge=lfs -text
 /project/movement filter=lfs diff=lfs merge=lfs -text
 /movement/library/ArtifactDB.file filter=lfs diff=lfs merge=lfs -text
+/movement/ArtifactDB.file filter=lfs diff=lfs merge=lfs -text
