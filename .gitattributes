@@ -3,3 +3,6 @@
 /My[[:space:]]project/** filter=lfs diff=lfs merge=lfs -text
 /movement filter=lfs diff=lfs merge=lfs -text
 /project filter=lfs diff=lfs merge=lfs -text
+/project/interface filter=lfs diff=lfs merge=lfs -text
+/project/movement filter=lfs diff=lfs merge=lfs -text
+/movement/library/ArtifactDB.file filter=lfs diff=lfs merge=lfs -text
