@@ -23426,6 +23426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b04e88605b37b184db7cdd91242c7603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 5
+  sprintMultiplier: 1.5
 --- !u!1 &1664018958
 GameObject:
   m_ObjectHideFlags: 0
@@ -28354,6 +28356,7 @@ MonoBehaviour:
   speed: 10
   cameraBoundary: 14
   offset: 0.25
+  smoothTime: 0.2
 --- !u!1001 &2008679185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28558,7 +28561,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 13.25
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -28583,7 +28586,7 @@ Transform:
   m_GameObject: {fileID: 2058537351}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.74, y: -1.92, z: -10}
+  m_LocalPosition: {x: -1.08, y: -1.92, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

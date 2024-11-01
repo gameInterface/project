@@ -6,47 +6,40 @@ namespace Minifantasy
 {
     public class CameraController : MonoBehaviour
     {
-        public float speed = 20;
-        public int cameraBoundary = 6;
-        private Vector3 startingPosition;
-        private Vector2 motion;
+        public Transform player;
+        public float smoothTime = 0.3f;
+        public Vector2 offset = new Vector2(0, 1);
 
-        [SerializeField]
-        private float offset = 0.25f;
+        private Vector3 velocity = Vector3.zero;
 
-        private void Start()
+        private void LateUpdate()
         {
-            startingPosition = transform.position;
+            // 목표 위치 계산
+            Vector3 targetPosition = new Vector3(
+                player.position.x + offset.x,
+                player.position.y + offset.y,
+                transform.position.z);
+
+            // SmoothDamp를 사용해 카메라를 목표 위치로 부드럽게 이동
+            Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+
+            // 카메라 위치를 픽셀 퍼펙트하게 설정 (반올림하여 정수화)
+            transform.position = RoundToPixel(smoothedPosition);
         }
 
-        private void Update()
+        private Vector3 RoundToPixel(Vector3 position)
         {
-            if (Mathf.Abs(transform.position.x) < cameraBoundary && Mathf.Abs(transform.position.y) <= cameraBoundary)
-            {
-                motion = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-                transform.Translate(motion * speed * Time.deltaTime);
-            }
-            else if (transform.position.x >= cameraBoundary)
-            {
-                transform.position = new Vector3(transform.position.x - offset, transform.position.y, transform.position.z);
-            }
-            else if (transform.position.x <= -cameraBoundary)
-            {
-                transform.position = new Vector3(transform.position.x + offset, transform.position.y, transform.position.z);
-            }
-            else if (transform.position.y >= cameraBoundary)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y - offset, transform.position.z);
-            }
-            else if (transform.position.y <= -cameraBoundary)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y + offset, transform.position.z);
-            }
+            float pixelPerUnit = 8f; // 예시: 16 PPU
+            position.x = Mathf.Round(position.x * pixelPerUnit) / pixelPerUnit;
+            position.y = Mathf.Round(position.y * pixelPerUnit) / pixelPerUnit;
+            return position;
         }
 
         public void ResetCamera()
         {
-            transform.position = startingPosition;
+            Vector3 targetPosition = new Vector3(player.position.x + offset.x, player.position.y + offset.y, transform.position.z);
+            transform.position = RoundToPixel(targetPosition);
+            velocity = Vector3.zero;
         }
     }
 }
