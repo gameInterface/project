@@ -9,7 +9,7 @@ public class StatAllocation : MonoBehaviour
     public Slider attackPowerSlider;
     public Slider attackSpeedSlider;
     public Slider attackRangeSlider;
-    
+
     public TextMeshProUGUI attackPowerValueText; // 공격력 슬라이더의 값을 표시할 텍스트
     public TextMeshProUGUI attackSpeedValueText; // 공격 속도 슬라이더의 값을 표시할 텍스트
     public TextMeshProUGUI attackRangeValueText; // 공격 범위 슬라이더의 값을 표시할 텍스트
@@ -28,10 +28,13 @@ public class StatAllocation : MonoBehaviour
         remainingPoints = totalPoints;
         UpdateRemainingPointsText();
         UpdateSliderValueTexts();
-        
+
         attackPowerSlider.onValueChanged.AddListener(delegate { OnSliderValueChanged(attackPowerSlider); });
         attackSpeedSlider.onValueChanged.AddListener(delegate { OnSliderValueChanged(attackSpeedSlider); });
         attackRangeSlider.onValueChanged.AddListener(delegate { OnSliderValueChanged(attackRangeSlider); });
+
+        // 초기 슬라이더 값 설정을 GameData에 반영
+        UpdateGameData();
     }
 
     void OnSliderValueChanged(Slider changedSlider)
@@ -48,6 +51,9 @@ public class StatAllocation : MonoBehaviour
 
         UpdateRemainingPointsText();
         UpdateSliderValueTexts();
+
+        // 슬라이더 값이 변경될 때마다 GameData 업데이트
+        UpdateGameData();
     }
 
     void UpdateRemainingPointsText()
@@ -62,9 +68,11 @@ public class StatAllocation : MonoBehaviour
         attackSpeedValueText.text = attackSpeedSlider.value.ToString();
         attackRangeValueText.text = attackRangeSlider.value.ToString();
     }
+
+    void UpdateGameData()
+    {
+        GameData.Instance.attackPower = (int)attackPowerSlider.value;
+        GameData.Instance.attackSpeed = (int)attackSpeedSlider.value;
+        GameData.Instance.attackRange = (int)attackRangeSlider.value;
+    }
 }
-
-
-
-
-
