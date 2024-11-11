@@ -6284,8 +6284,8 @@ MonoBehaviour:
   headlessStartMode: 0
   editorAutoStart: 0
   sendRate: 60
-  offlineScene: Assets/script/Main Menu Scene.unity
-  onlineScene: Assets/script/Lobby Scene.unity
+  offlineScene: 
+  onlineScene: 
   offlineSceneLoadDelay: 0
   transport: {fileID: 2106955366}
   networkAddress: localhost
@@ -6315,7 +6315,7 @@ MonoBehaviour:
   showRoomGUI: 1
   minPlayers: 1
   roomPlayerPrefab: {fileID: -7685443361331795618, guid: a1766d47f8dfd4347a3709cc3c4ba3b2, type: 3}
-  RoomScene: Assets/script/Lobby Scene.unity
+  RoomScene: 
   GameplayScene: 
   _allPlayersReady: 0
   clientIndex: 0
