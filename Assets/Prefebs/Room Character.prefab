@@ -158,6 +158,7 @@ MonoBehaviour:
   syncInterval: 0
   isMoveable: 1
   speed: 2
+  dotPrefab: {fileID: 97488433299920252, guid: 1f3c16e7e0afc464a8998a1e9ac52736, type: 3}
 --- !u!95 &2461708416360225584
 Animator:
   serializedVersion: 5

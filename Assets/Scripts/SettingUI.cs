@@ -17,38 +17,6 @@ public class SettingUI : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void OnEnable()
-    {
-        switch (PlayerSettings.controlType)
-        {
-            case EControlType.Mouse:
-                MouseControlButton.image.color = Color.green;
-                KeyboardMouseControlButton.image.color = Color.white;
-                break;
-            case EControlType.KeyboardMouse:
-                MouseControlButton.image.color = Color.white;
-                KeyboardMouseControlButton.image.color = Color.green;
-                break;
-        }
-    }
-
-    public void SetControlMode(int controlType)
-    {
-        PlayerSettings.controlType = (EControlType)controlType;
-        switch (PlayerSettings.controlType)
-        {
-            case EControlType.Mouse:
-                MouseControlButton.image.color = Color.green;
-                KeyboardMouseControlButton.image.color = Color.white;
-                break;
-
-            case EControlType.KeyboardMouse:
-                MouseControlButton.image.color = Color.white;
-                KeyboardMouseControlButton.image.color = Color.green;
-                break;
-        }
-    }
-
     public void Close()
     {
         StartCoroutine(CloseAfterDelay());
