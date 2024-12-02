@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 public class SettingUI : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class SettingUI : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
     }
 
     public void Close()
@@ -29,5 +31,7 @@ public class SettingUI : MonoBehaviour
         gameObject.SetActive(false);
         animator.ResetTrigger("close");
     }
+
+
 }
 

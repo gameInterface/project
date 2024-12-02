@@ -12,4 +12,5 @@ public class RoomManager : NetworkRoomManager
         var player = Instantiate(spawnPrefabs[0]);
         NetworkServer.Spawn(player, conn);
     }
+
 }

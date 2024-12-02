@@ -1,49 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Dot : MonoBehaviour
+public class Dot : NetworkBehaviour
 {
-    private float speed;
+    [SyncVar]
+    private float duration;
+    [SyncVar]
+    private int damage;
+    [SyncVar]
     private Vector3 direction;
-    private float damage;
-    private float range; // 범위 변수를 추가
-    private float traveledDistance = 0f; // 이동한 거리 추적
+    [SyncVar]
+    private float range;
+    [SyncVar]
+    private NetworkIdentity shooter;
+
+    private Vector3 startPosition;
+    private float speed = 5f;
+    private float startTime;
+
+    // 도트의 속성 설정
+    public void SetStats(float duration, int damage, Vector3 direction, float range, NetworkIdentity shooter)
+    {
+        this.duration = duration;
+        this.damage = damage;
+        this.direction = direction.normalized;
+        this.range = range;
+        this.shooter = shooter;
+        startPosition = transform.position;
+        startTime = Time.time;
+    }
 
     void Update()
     {
+
         // 도트 이동
-        transform.position += direction * speed * Time.deltaTime;
+        float step = speed * Time.deltaTime;
+        transform.position += direction * step;
 
-        // 이동한 거리 업데이트
-        traveledDistance += speed * Time.deltaTime;
-
-        // 도트가 설정된 범위를 초과했을 때 파괴
-        if (traveledDistance > range)
+        // 이동한 거리 또는 지속 시간이 초과되면 도트 파괴
+        if (Vector3.Distance(startPosition, transform.position) >= range)
         {
-            Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
         }
     }
 
-    public void SetSpeed(float newSpeed)
+    // 도트가 충돌했을 때 처리
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        speed = newSpeed;
+
+        InGameCharacterMover target = other.GetComponent<InGameCharacterMover>();
+        if (target != null && target.netIdentity != shooter)
+        {
+            target.TakeDamage(damage);
+            NetworkServer.Destroy(gameObject);
+        }
     }
-
-    public void SetDirection(Vector3 newDirection)
-    {
-        direction = newDirection.normalized; // 방향을 정규화
-    }
-
-    public void SetDamage(float newDamage)
-    {
-        damage = newDamage; // 데미지 설정
-    }
-
-    public void SetRange(float newRange) // 범위 설정 메서드 추가
-    {
-        range = newRange;
-    }
-
-
 }

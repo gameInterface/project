@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+
 public class CharacterMover : NetworkBehaviour
 {
     private Animator animator;
@@ -9,6 +10,7 @@ public class CharacterMover : NetworkBehaviour
     [SyncVar] public float speed = 2f;
 
     public GameObject dotPrefab;
+
     [SyncVar(hook = nameof(OnDirectionChanged))]
     private Vector3 lastMoveDir = Vector3.right;
 
@@ -29,23 +31,41 @@ public class CharacterMover : NetworkBehaviour
 
     void FixedUpdate()
     {
-        move();
+        Move();
         HandleDotFire();
     }
 
-    public void move()
+    public void Move()
     {
         if (isOwned && isMoveable)
         {
             bool isMove = false;
-            Vector3 dir = Vector3.ClampMagnitude(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f), 1f);
 
-            if (dir != Vector3.zero) lastMoveDir = dir;
+            // WASD 키 입력에 따라 이동 방향 설정
+            Vector3 dir = Vector3.zero;
+            if (Input.GetKey(KeyCode.W)) dir.y += 1f;
+            if (Input.GetKey(KeyCode.S)) dir.y -= 1f;
+            if (Input.GetKey(KeyCode.A)) dir.x -= 1f;
+            if (Input.GetKey(KeyCode.D)) dir.x += 1f;
+
+            dir = Vector3.ClampMagnitude(dir, 1f); // 방향 벡터를 정규화하여 대각선 이동 속도 일정 유지
+
+            if (dir != Vector3.zero)
+            {
+                // 서버로 방향 업데이트 요청
+                CmdUpdateDirection(dir);
+            }
 
             transform.position += dir * speed * Time.deltaTime;
             isMove = dir.magnitude != 0f;
             animator.SetBool("isMove", isMove);
         }
+    }
+
+    [Command] // 서버에서 방향 업데이트 처리
+    private void CmdUpdateDirection(Vector3 dir)
+    {
+        lastMoveDir = dir; // SyncVar 업데이트
     }
 
     private void OnDirectionChanged(Vector3 oldDir, Vector3 newDir)
@@ -56,7 +76,7 @@ public class CharacterMover : NetworkBehaviour
 
     private void HandleDotFire()
     {
-        if (isOwned && Input.GetKeyDown(KeyCode.LeftControl) && Time.time >= nextAttackTime)
+        if (isOwned && Input.GetKeyDown(KeyCode.RightShift) && Time.time >= nextAttackTime)
         {
             FireDot();
             nextAttackTime = Time.time + 1f / GameData.Instance.attackSpeed; // Sets cooldown based on attack speed
@@ -70,11 +90,7 @@ public class CharacterMover : NetworkBehaviour
 
         if (dotScript != null)
         {
-            dotScript.SetSpeed(10f);
-            dotScript.SetDamage(GameData.Instance.attackPower);
-            dotScript.SetDirection(lastMoveDir);
-            dotScript.SetRange(GameData.Instance.attackRange);
+            dotScript.SetStats(10f, GameData.Instance.attackPower, lastMoveDir, GameData.Instance.attackRange, netIdentity);
         }
     }
 }
-
